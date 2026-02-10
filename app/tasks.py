@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 from app.database import SessionLocal
 from sqlalchemy.orm import Session
@@ -5,7 +6,8 @@ from app.models import Task
 from app.schemas import TaskCreate
 import jwt
 
-SECRET_KEY = 'your-secret-key'
+load_dotenv()
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 router = APIRouter()
 

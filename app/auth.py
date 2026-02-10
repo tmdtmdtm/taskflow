@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException 
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
@@ -7,7 +8,8 @@ import bcrypt
 import datetime
 import jwt
 
-SECRET_KEY = 'your-secret-key'
+load_dotenv()
+SECRET_KEY = os.environ.get("SECRET_KEY")
 router = APIRouter()
 
 def get_db():
