@@ -20,7 +20,7 @@
         }
 
         async function loadTasks() {
-            const res = await fetch(`http://127.0.0.1:8000/tasks?token=${token}`);
+            const res = await fetch(`https://taskflow-j1ue.onrender.com/tasks?token=${token}`);
             const tasks = await res.json();
 
             const list = document.getElementById("taskList");
@@ -34,7 +34,7 @@
                 delBtn.textContent = "delete";
                 
                 delBtn.onclick = async () => {
-                    await fetch(`http://127.0.0.1:8000/tasks/${task.id}?token=${token}`,{
+                    await fetch(`https://taskflow-j1ue.onrender.com/tasks/${task.id}?token=${token}`,{
                         method:"DELETE"
                     });
                     loadTasks();
@@ -49,7 +49,7 @@
             const title = document.getElementById("title").value;
             const description = document.getElementById("description").value;
 
-            await fetch(`http://127.0.0.1:8000/tasks?token=${token}`,{
+            await fetch(`https://taskflow-j1ue.onrender.com/tasks?token=${token}`,{
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({title,description})
