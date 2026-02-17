@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TaskFlow - Tasks</title>
+</head>
+<body>
+    <h1>Your Tasks</h1>
+
+    <div>
+        <input type="text" id="title" placeholder="Task title">
+        <input type="text" id="description" placeholder="Description">
+        <button id="addBtn">Add Task</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        async function loadTasks() {
+            const res = await fetch(`http://127.0.0.1:8000/tasks?token=${token}`);
+            const tasks = await res.json();
+
+            const list = document.getElementById("taskList");
+            list.innerHTML = "";
+
+            tasks.forEach(task => {
+                const li = document.createElement("li");
+                li.textContent = `${task.title} - ${task.description || ""}`;
+
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "Delete";
+                delBtn.onclick = async () => {
+                    await fetch(`http://127.0.0.1:8000/tasks/${task.id}?token=${token}`, {
+                        method: "DELETE"
+                    });
+                    loadTasks();
+                };
+
+                li.appendChild(delBtn);
+                list.appendChild(li);
+            });
+        }
+
+        document.getElementById("addBtn").onclick = async () => {
+            const title = document.getElementById("title").value;
+            const description = document.getElementById("description").value;
+
+            await fetch(`http://127.0.0.1:8000/tasks?token=${token}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, description })
+            });
+
+            loadTasks();
+        };
+
+        loadTasks();
+    </script>
+</body>
+</html>

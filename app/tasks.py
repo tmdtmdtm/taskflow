@@ -26,13 +26,13 @@ def get_current_user(token: str):
     except:
         raise HTTPException(status_code=401,detail="Invalid token")
 
-@router.get("/")
+@router.get("")
 def list_tasks(token:str,db:Session = Depends(get_db)):
     user_id = get_current_user(token)
     tasks = db.query(Task).filter(Task.owner_id == user_id).all()
     return tasks
 
-@router.post("/")
+@router.post("")
 def create_tasks(task:TaskCreate,token:str,db: Session = Depends(get_db)):
     user_id = get_current_user(token)
     tasks = Task(title = task.title, description = task.description, owner_id = user_id)
@@ -40,7 +40,7 @@ def create_tasks(task:TaskCreate,token:str,db: Session = Depends(get_db)):
     db.commit()
     return {"message":"Task created"}
 
-@router.post("{task_id}")
+@router.delete("/{task_id}")
 def delete_task(task_id:int,token:str,db: Session = Depends(get_db)):
     user_id = get_current_user(token)
     task = db.query(Task).filter(Task.id == task_id, Task.owner_id == user_id).first()
